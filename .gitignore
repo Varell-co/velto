@@ -1,0 +1,11 @@
+# SwiftPM build artifacts
+.build/
+.swiftpm/
+
+# Locally built application
+Velto.app/
+dist/
+
+# macOS and editor files
+.DS_Store
+*.xcuserstate
