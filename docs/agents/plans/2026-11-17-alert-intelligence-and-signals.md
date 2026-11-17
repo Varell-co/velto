@@ -445,24 +445,24 @@ Dependencies: Phase 8
 "Green doesn't always mean healthy": watch scrape targets, and check services without any Prometheus. Ships v0.4.0.
 
 **Tasks**:
-- [-] `Model.swift` `Source.watchTargets: Bool`; `Fetch.swift`: when set on a `.prometheus` source, GET `{base}/api/v1/targets?state=active`, produce check `Targets up` with display `214/216`, warn when any target is down, crit when more than 10% are down; failure → `unknown`. Mimir sources get the "Targets down" query preset instead (no targets API); the toggle is hidden for them.
-- [-] `Model.swift`: `SourceKind.probes` (label "Probes"); `Probe { id: UUID; name: String; type: http|tcp|tls|dns; target: String; expectStatus: ClosedRange<Int>?; warnDays: Int = 14; critDays: Int = 7 }`; `Source.probes: [Probe]`. `isComplete` for `.probes` = at least one probe with a non-empty target; `alertsURL()` stays nil-safe.
-- [-] New `Sources/VeltoCore/Probe.swift`, `ProbeRunner.run(_ probe:, skipTLSVerify:) async -> Check`:
+- [x] `Model.swift` `Source.watchTargets: Bool`; `Fetch.swift`: when set on a `.prometheus` source, GET `{base}/api/v1/targets?state=active`, produce check `Targets up` with display `214/216`, warn when any target is down, crit when more than 10% are down; failure → `unknown`. Mimir sources get the "Targets down" query preset instead (no targets API); the toggle is hidden for them.
+- [x] `Model.swift`: `SourceKind.probes` (label "Probes"); `Probe { id: UUID; name: String; type: http|tcp|tls|dns; target: String; expectStatus: ClosedRange<Int>?; warnDays: Int = 14; critDays: Int = 7 }`; `Source.probes: [Probe]`. `isComplete` for `.probes` = at least one probe with a non-empty target; `alertsURL()` stays nil-safe.
+- [x] New `Sources/VeltoCore/Probe.swift`, `ProbeRunner.run(_ probe:, skipTLSVerify:) async -> Check`:
   - http: GET with 10s timeout; ok when status in `expectStatus ?? 200...399`; display `200 · 140 ms`
   - tcp: `NWConnection` to `host:port`, ready within 5s → ok; display `open · 22 ms`
   - tls: URLSession delegate captures `serverTrust`, `SecTrustCopyCertificateChain` → leaf `SecCertificateCopyValues` with `kSecOIDX509V1ValidityNotAfter`; days left vs `warnDays`/`critDays`; display `23 days`
   - dns: `getaddrinfo`, ok when any address; display first address
-- [-] `Fetch.swift` `Fetcher.fetch`: `.probes` → run all probes concurrently, `alerts: []`; a probes source is never "offline" (each probe carries its own state).
-- [-] `SourceEditor.swift`: for `.probes`, hide URL/auth and show a probe list editor (type picker, target with per-type placeholder `https://…`, `host:443`, `example.com`) with per-probe Test.
-- [-] `MenuView.swift`/`MainWindow.swift`: probes source rows reuse the Checks section; root trailing shows breached count.
-- [-] `Checks/main.swift`: `checkProbes()` — probe config round-trip, isComplete rules, TLS day thresholds, HTTP status range evaluation (pure functions), targets JSON parsing (all up, some down, >10% down), target toggle ignored for Mimir. Network-touching runners are exercised only against `127.0.0.1` listeners started inside the check (TCP open/closed).
-- [-] `README.md`: Probes + target health sections; Sources table gains "Probes".
-- [-] `RELEASE_NOTES.md` (v0.4.0 covering phases 8-9), `VERSION` → `0.4.0`.
+- [x] `Fetch.swift` `Fetcher.fetch`: `.probes` → run all probes concurrently, `alerts: []`; a probes source is never "offline" (each probe carries its own state).
+- [x] `SourceEditor.swift`: for `.probes`, hide URL/auth and show a probe list editor (type picker, target with per-type placeholder `https://…`, `host:443`, `example.com`) with per-probe Test.
+- [x] `MenuView.swift`/`MainWindow.swift`: probes source rows reuse the Checks section; root trailing shows breached count.
+- [x] `Checks/main.swift`: `checkProbes()` — probe config round-trip, isComplete rules, TLS day thresholds, HTTP status range evaluation (pure functions), targets JSON parsing (all up, some down, >10% down), target toggle ignored for Mimir. Network-touching runners are exercised only against `127.0.0.1` listeners started inside the check (TCP open/closed).
+- [x] `README.md`: Probes + target health sections; Sources table gains "Probes".
+- [x] `RELEASE_NOTES.md` (v0.4.0 covering phases 8-9), `VERSION` → `0.4.0`.
 
 **Automated Verification**:
-- [ ] `swift run VeltoChecks` passes, including `checkProbes()`
-- [ ] `swift build -c release` succeeds
-- [ ] `bash build-app.sh` builds and installs the app
+- [x] `swift run VeltoChecks` passes, including `checkProbes()`
+- [x] `swift build -c release` succeeds
+- [x] `bash build-app.sh` builds and installs the app
 
 **Manual Verification**:
 - [ ] A Probes source with an HTTP probe, a TLS probe on a real site and a TCP probe on a closed port shows ok / days left / crit in the menu, and the closed port counts toward the badge

@@ -1,3 +1,14 @@
+# Velto v0.4.0
+
+## New
+
+- Pinned PromQL queries on Prometheus and Mimir sources, with units, warn and crit thresholds, presets and a per-query Test; breached checks count as firing, empty results show "no data"
+- `velto checks`, plus checks in xbar and the Waybar tooltip
+- Scrape-target health for Prometheus sources (`Targets up 214/216`)
+- Probes source: HTTP, TCP, TLS-expiry and DNS checks without any Prometheus
+
+---
+
 # Velto v0.3.0
 
 ## New
